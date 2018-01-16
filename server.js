@@ -1,29 +1,33 @@
-require("dotenv").config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const app = express();
+require("dotenv").config()
+
+const express = require('express')
+const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+
+const app = express()
+
+app.use(express.static(__dirname + '/client/build/'))
 
 mongoose.connect(process.env.MONGODB_URI, {
     useMongoClient: true
-}); //mongodb://localhost/idea-board
+}) //mongodb://localhost/idea-board
 
-const connection = mongoose.connection;
+const connection = mongoose.connection
 connection.on('connected', () => {
-    console.log('Mongoose Connected Successfully');
-});
+    console.log('Mongoose Connected Successfully')
+})
 
 // If the connection throws an error
 connection.on('error', (err) => {
-    console.log('Mongoose default connection error: ' + err);
-});
-
-app.use(bodyParser.json());
-app.get('/', (req, res) => {
-    res.send('Hello world!')
+    console.log('Mongoose default connection error: ' + err)
 })
 
-const PORT = process.env.PORT || 3001;
+app.use(bodyParser.json())
+app.get('/', (req,res) => {
+    res.sendFile(__dirname + '/client/build/index.html')
+  })
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-    console.log("Magic happening on port " + PORT);
+    console.log("Magic happening on port " + PORT)
 })
